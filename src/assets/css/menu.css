@@ -1,0 +1,27 @@
+.nav-link{
+    color: var(--color-grey);
+}
+
+.nav-link .fa{
+    font-size: 30px;
+}
+
+.nav-shopping-cart:after{
+    content: attr(data-after);
+    font-size: 12px;
+    font-weight: bold;
+    position: absolute;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    top:43%;
+    left:55%;
+    transform: translate(-50%, -50%);
+    /*background-color: var(--color-red);*/
+    color: var(--color-white);
+}
+
+#adminNav {
+    visibility: hidden;
+}

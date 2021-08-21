@@ -1,0 +1,10 @@
+{
+  "database": {
+    "host": "db.hbo-ict.cloud",
+    "timeout": 30000,
+    "username": "pad_eyf_7",
+    "password": "I644JROE2PSbZnGN",
+    "database": "pad_eyf_7_shop",
+    "connectionLimit": 1
+  }
+}

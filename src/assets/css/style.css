@@ -1,0 +1,27 @@
+/*
+    Here we include all seperate css files.
+    We call this file in index.html
+*/
+
+/*
+    z-index infromation:
+        1: Flight location map (.map)
+        10: Menu header bar (.sidebar)
+ */
+
+@import "grid.css";
+@import "video-js.css";
+@import "variables.css";
+@import "default.css";
+@import "menu.css";
+@import "form.css";
+@import "button.css";
+@import "home.css";
+@import "typo.css";
+@import "shopping-cart.css";
+@import "VideoPagina.css";
+@import "filmoverzicht.css";
+@import "manageUsers.css";
+@import "manageProduct.css";
+@import "manageData.css";
+@import "notifications.css";

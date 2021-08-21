@@ -1,0 +1,29 @@
+<div class="container">
+    <div class="row">
+        <h2 class="col mt-5 mb-4">Shop</h2>
+    </div>
+    <div class="row">
+        <div class="col float-right mb-3">
+            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                <label id="shopFilterAll" class="shopFilter pt-1 pb-1 pr-3 pl-3 mr-3 btn btn-filter active"><input class="d-none" type="radio" value="0" name="optradio" checked>Show all</label>
+                <label id="shopFilterFood" class="shopFilter pt-1 pb-1 pr-3 pl-3 mr-3 btn btn-filter"><input class="d-none" type="radio" value="1" name="optradio">Show food</label>
+                <label id="shopFilterDrink" class="shopFilter pt-1 pb-1 pr-3 pl-3 mr-3 btn btn-filter"><input class="d-none" type="radio" value="2" name="optradio">Show drinks</label>
+                <label id="shopFilterOther" class="shopFilter pt-1 pb-1 pr-3 pl-3 mr-3 btn btn-filter"><input class="d-none" type="radio" value="3" name="optradio">Show other</label>
+            </div>
+        </div>
+    </div>
+    <div class="product-overview--container row d-flex">
+        <div class="product-overview--template product-overview position-relative d-flex flex-column p-3 pb-5 col-6 col-md-4 col-lg-3">
+            <div class="product-image d-block position-relative">
+                <span class="product-price circle text-center position-absolute shadow-sm"></span>
+            </div>
+            <h4 class="product-title mt-3"></h4>
+            <p class="product-description"></p>
+            <button class="btn btn-block btn-primary add-cart">Add to cart</button>
+        </div>
+    </div>
+    <div class="btn-shopping-cart btn-shopping-cart-after position-fixed p-4 m-4 rounded-circle shadow-lg">
+        <span class="fa fa-2x fa-shopping-cart"></span>
+    </div>
+    <div class="m-5"></div>
+</div>

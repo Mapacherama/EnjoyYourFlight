@@ -1,0 +1,48 @@
+<div class="container">
+    <div class="row justify-content-sm-center">
+        <div class="col-sm-12 pt-5">
+
+        </div>
+        <div class="col-sm-4 mt-3 tulip--container tulip--container--stem">
+            <div class="row m-0">
+                <div class="col-sm-5 mb-3 p-0">
+                    <img class="img-fluid" src="assets/img/logo.png" alt="Tulip Air logo">
+                </div>
+
+            </div>
+            <h1>Welcome,</h1>
+            <h3 class="mb-3">register to use the system</h3>
+
+            <form class="register-form needs-validation">
+                <div class="form-group">
+                    <label for="inputSeatNumber">Seat number</label>
+                    <input type="text" name="username" class="form-control" id="inputSeatNumber" aria-describedby="emailHelp" placeholder="seat number">
+                </div>
+                <div class="form-group">
+                    <label for="inputPassword">Password</label>
+                    <div class="input-group">
+                        <input type="password" name="password" class="form-control" id="inputPassword" placeholder="password">
+                        <div class="input-group-append">
+                            <span class="input-group-text fa fa-eye show-pass" id="showPasswordButton"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="inputPasswordConfirm">Confirm password</label>
+                    <div class="input-group">
+                        <input type="password" name="password" class="form-control" id="inputPasswordConfirm" placeholder="confirm password">
+                        <div class="input-group-append">
+                            <span class="input-group-text fa fa-eye show-pass" id="showPasswordConfirmButton"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="error mb-3 text-danger"></div>
+
+                <button type="submit" id="registerButton" class="btn btn-primary btn-block">Register</button>
+                <button id="loginButton" class="btn btn-block">Already have an account? Login</button>
+            </form>
+        </div>
+    </div>
+</div>

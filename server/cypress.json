@@ -1,0 +1,6 @@
+{
+  "integrationFolder": "cypress/integration/pad",
+  "video": false,
+  "baseUrl": "http://localhost:8080/",
+  "requestTimeout": 10000
+}

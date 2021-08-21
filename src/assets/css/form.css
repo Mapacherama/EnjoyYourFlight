@@ -1,0 +1,18 @@
+.form-group{
+    position: relative;
+}
+
+.form-group label{
+    /*position: absolute;*/
+    /*padding: .375rem .75rem;*/
+}
+
+/*.form-group .form-control:focus label*/
+
+/*Input text fields*/
+.form-group .form-control{
+    border-radius: 0;
+    border: none;
+    background-color: #f8f8f8;
+    border-bottom: 1px solid var(--color-grey);
+}

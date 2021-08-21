@@ -1,0 +1,27 @@
+<div class="container manage-data">
+    <div class="col">
+        <h2 class="col mt-5">Manage Data</h2>
+    </div>
+    <div class="col">
+        <h2 class="col mt-5">Products</h2>
+            <div>
+                <input type="file" id="productCSV" name="productCSV"
+                accept=".csv">
+            </div>
+        <button class="btn btn-primary" id="products-import">Import</button>
+
+        <br>
+        <button class="btn btn-primary" id="products-export">Export</button>
+    </div>
+
+    <div class="col">
+        <h2 class="col mt-5">Analytics</h2>
+        <h3 class="col mt-5">Orders</h3>
+        <button class="btn btn-primary" id="orders-export">Export</button>
+        <h3 class="col mt-5">Page Visits</h3>
+        <button class="btn btn-primary" id="visits-export">Export</button>
+    </div>
+
+    <iframe id="download" style="visibility: hidden"></iframe>
+
+</div>

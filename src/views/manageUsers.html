@@ -1,0 +1,59 @@
+<div class="justify-content-center w-100">
+
+    <div class="manage-edit-overlay">
+        <div class="manage-dialogue-wrapper d-flex">
+            <div class="manage-dialogue-box">
+                <i class="fas fa-times"></i>
+                <h2>Change Seat Number</h2>
+                <form class="form-group" id="manage-seat-change">
+                    <input type="text" name="seat" class="form-control" id="seatNumber">
+                    <button type="submit" class="btn btn-primary btn-block">Change</button>
+                </form>
+                <h2>Change Password</h2>
+                <form class="form-group" id="manage-password-change">
+                    <input type="password" name="seat" class="form-control" id="pass">
+                    <input type="password" name="seat" class="form-control" id="confirmPass">
+                    <span class="invalid-feedback" style="height: 0">
+                        Passwords don't match.
+                    </span>
+                    <button type="submit" class="btn btn-primary btn-block">Change</button>
+                </form>
+                <button class="btn btn-block" id="deleteButton">Delete Account</button>
+            </div>
+        </div>
+        <div class="manage-darkener d-flex">
+        </div>
+    </div>
+
+    <div class="manage-title-card">
+        <div class="centered w-100 d-flex">
+            <div class="manage-nav w-100 d-flex">
+                <!--<i class="fas fa-long-arrow-alt-left"></i>-->
+                <!--<img class="manage-logo" src="./assets/img/tulip.png">-->
+                <!--<i class="fas fa-bars"></i>-->
+            </div>
+            <h1>Manage Users</h1>
+        </div>
+    </div>
+
+    <div class="w-100 d-flex manage-user-list-wrapper">
+        <form class="form-group">
+            <input id="searchUsers" type="text" class="form-control" style="margin-bottom: 20px;"
+                   aria-label="Search users">
+        </form>
+        <div class="manage-user-list">
+            <div class="manage-block template">
+                <div class='w-100 manage-block-separator'
+                     style='height: 1px; background: #E9E9E9; margin-bottom: 10px; margin-top: 10px;'></div>
+                <div class="manage-block-aligner d-flex col">
+                <div class="manage-seat-text-wrapper">
+                    <h1>A1</h1>
+                </div>
+                <button class="editButton btn btn-primary btn-block">Edit</button>
+                <br>
+                <button class="blockButton btn btn-primary btn-block">Block</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

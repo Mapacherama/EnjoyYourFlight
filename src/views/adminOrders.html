@@ -1,0 +1,29 @@
+<div class="container">
+    <div class="row">
+        <h2 class="col mt-5 mb-5">All open orders</h2>
+    </div>
+    <div class="admin-order-container row d-flex">
+        <div class="inline-grid grid--admin-order col">
+            <span>Seat number</span>
+            <span>Order number</span>
+            <span>Products</span>
+        </div>
+        <div class="template-order admin-order col-12 pt-2 pb-2 mb-2 bg-light inline-grid grid--admin-order">
+            <h5 class="order-seat-number"></h5>
+            <h5 class="order-order-number"></h5>
+            <div class="order-products">
+                <div class="template-product d-flex">
+                    <span class="order-quantity pt-1 pb-1 pr-1 font-weight-bold"></span>
+                    <span class="order-title pt-1 pb-1"></span>
+                    <span class="order-price pt-1 pb-1"></span>
+                </div>
+                <h4 class="order-total-price pt-1 pb-1 m-0">TOTAL</h4>
+            </div>
+            <div class="grid-self-end">
+                <button id="orderComplete" class="btn btn-solid align-self-center">Order complete</button>
+                <button id="orderCancel" class="btn btn-primary align-self-center">Cancel order</button>
+            </div>
+        </div>
+    </div>
+    <div class="m-5"></div>
+</div>

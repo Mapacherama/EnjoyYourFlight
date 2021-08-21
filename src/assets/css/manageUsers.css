@@ -1,0 +1,208 @@
+/* ------------------------------------------------------------------------
+      _____ _ _   _         ____              _
+     |_   _(_) |_| | ___   / ___|__ _ _ __ __| |
+       | | | | __| |/ _ \ | |   / _` | '__/ _` |
+       | | | | |_| |  __/ | |__| (_| | | | (_| |
+       |_| |_|\__|_|\___|  \____\__,_|_|  \__,_|
+--------------------------------------------------------------------------*/
+
+.manage-fixed {
+    position: fixed;
+    z-index: 4;
+    width: 100%;
+}
+
+.manage-title-card {
+    padding-top: 124px;
+    width: 100vw;
+    background: white;
+    z-index: 1;
+    position: fixed;
+}
+
+.manage-title-card .centered {
+    flex-direction: column;
+    align-items: center;
+}
+
+.manage-title-card h1 {
+    margin-bottom: 30px;
+}
+
+.manage-nav {
+    flex-direction: row;
+    justify-content: center; /* Use space-between when there are multiple elements*/
+    align-items: center;
+    vertical-align: center;
+}
+
+.manage-nav i, .manage-logo {
+    width: 40px;
+    font-size: 27px;
+    margin: 25px;
+}
+
+/* ------------------------------------------------------------------------
+      _     _     _    __     ___
+     | |   (_)___| |_  \ \   / (_) _____      __
+     | |   | / __| __|  \ \ / /| |/ _ \ \ /\ / /
+     | |___| \__ \ |_    \ V / | |  __/\ V  V /
+     |_____|_|___/\__|    \_/  |_|\___| \_/\_/
+--------------------------------------------------------------------------*/
+
+#searchUsers {
+    width: 614px;
+}
+
+.manage-block-aligner {
+    height: 72px;
+    width: fit-content;
+    vertical-align: middle;
+    align-items: center;
+}
+
+.manage-block button {
+    height: 38px;
+    width: 177px;
+    margin-left: 15px;
+}
+
+.manage-block .manage-blocked-text {
+    width: 177px;
+    margin: 0 0 0 15px;
+    text-align: center;
+    vertical-align: middle;
+    align-items: center;
+}
+
+.manage-block h1 {
+    margin: 0;
+}
+
+.manage-seat-text-wrapper {
+    width: 200px;
+}
+
+.manage-user-list-wrapper {
+    padding-top: 246px; /* 56px added, has to do with the header, can be subtracted when the header is removed.*/
+
+}
+
+.manage-user-list, .manage-user-list-wrapper {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+@media only screen and (max-width: 615px) {
+
+    #searchUsers {
+        width: 340px;
+    }
+
+    .manage-block button {
+        width: 80px;
+    }
+
+    .manage-block .manage-blocked-text {
+        width: 80px;
+    }
+
+
+    .manage-block h1, .manage-title-card h1 {
+        font-size: 40px;
+    }
+
+    .manage-seat-text-wrapper {
+        width: 120px;
+    }
+}
+
+/* ------------------------------------------------------------------------
+      _____    _ _ _      ___                 _
+     | ____|__| (_) |_   / _ \__   _____ _ __| | __ _ _   _
+     |  _| / _` | | __| | | | \ \ / / _ \ '__| |/ _` | | | |
+     | |__| (_| | | |_  | |_| |\ V /  __/ |  | | (_| | |_| |
+     |_____\__,_|_|\__|  \___/  \_/ \___|_|  |_|\__,_|\__, |
+                                                      |___/
+--------------------------------------------------------------------------*/
+
+
+.manage-edit-overlay {
+    width: 100vw;
+    justify-content: center;
+}
+
+/*Dark background*/
+.manage-darkener {
+    background-color: #393939;
+    position: fixed;
+    opacity: 38%;
+    height: 100vh;
+    width: 100vw;
+    z-index: 2;
+}
+
+.manage-dialogue-wrapper {
+    vertical-align: middle;
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    align-items: center;
+    justify-content: center;
+    z-index: 3;
+}
+
+.manage-dialogue-box {
+    width: 619px;
+    padding-left: 29px;
+    padding-top: 29px;
+    background-color: #fff;
+    border-radius: 20px;
+}
+
+.manage-dialogue-box input {
+    width: 343px;
+    margin-bottom: 41px;
+}
+
+#confirmPass {
+    margin-bottom: 5px !important;
+}
+
+.manage-dialogue-box button {
+    width: 343px;
+    margin-bottom: 41px;
+}
+
+#manage-password-change button {
+    margin-top: 36px;
+}
+
+.manage-dialogue-box i {
+    position: static;
+    float: right;
+    margin-right: 29px;
+}
+
+.manage-dialogue-box i:hover {
+    cursor: pointer;
+}
+
+@media only screen and (max-width: 615px) {
+
+    .manage-edit-overlay h2 {
+        font-size: 25px;
+    }
+
+    .manage-dialogue-box button {
+        width: 150px;
+        margin-bottom: 41px;
+    }
+
+    .manage-dialogue-box input {
+        width: 250px;
+        margin-bottom: 41px;
+    }
+
+}

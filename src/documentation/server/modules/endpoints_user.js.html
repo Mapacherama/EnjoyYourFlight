@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>endpoints/user.js</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <script src="scripts/search.js"></script>
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.4.5/fuse.min.js"></script> -->
+    <script src="scripts/fuse.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+    <link type="text/css" rel="stylesheet" href="styles/clean-jsdoc-theme.css">
+    
+    
+    
+<svg aria-hidden="true" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="display:none">
+    <defs>
+        <symbol id="copy-icon" viewbox="0 0 488.3 488.3">
+            <g>
+                <path d="M314.25,85.4h-227c-21.3,0-38.6,17.3-38.6,38.6v325.7c0,21.3,17.3,38.6,38.6,38.6h227c21.3,0,38.6-17.3,38.6-38.6V124    C352.75,102.7,335.45,85.4,314.25,85.4z M325.75,449.6c0,6.4-5.2,11.6-11.6,11.6h-227c-6.4,0-11.6-5.2-11.6-11.6V124    c0-6.4,5.2-11.6,11.6-11.6h227c6.4,0,11.6,5.2,11.6,11.6V449.6z"/>
+                <path d="M401.05,0h-227c-21.3,0-38.6,17.3-38.6,38.6c0,7.5,6,13.5,13.5,13.5s13.5-6,13.5-13.5c0-6.4,5.2-11.6,11.6-11.6h227    c6.4,0,11.6,5.2,11.6,11.6v325.7c0,6.4-5.2,11.6-11.6,11.6c-7.5,0-13.5,6-13.5,13.5s6,13.5,13.5,13.5c21.3,0,38.6-17.3,38.6-38.6    V38.6C439.65,17.3,422.35,0,401.05,0z"/>
+            </g>
+        </symbol>
+    </defs>
+</svg>
+
+</head>
+<body>
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <h2><a href="index.html"><div class="text">Home</div></a></h2><div class="search-box"><input type="text" placeholder="Search..." id="search-box" /><div class="search-item-container" id="search-item-container"><ul class="search-item-ul" id="search-item-ul"></ul></div></div><div class="sidebar-list-div"><h3>Modules</h3><ul><li><a href="module-Admin.html">Admin</a><ul class='methods'><li data-type='method'><a href="module-Admin.html#.init">init</a></li></ul></li><li><a href="module-App.html">App</a></li><li><a href="module-Cleanup.html">Cleanup</a></li><li><a href="module-CommonTools.html">CommonTools</a><ul class='methods'><li data-type='method'><a href="module-CommonTools.html#.checkIfBlocked">checkIfBlocked</a></li><li data-type='method'><a href="module-CommonTools.html#.generateCSV">generateCSV</a></li><li data-type='method'><a href="module-CommonTools.html#.getAllProducts">getAllProducts</a></li><li data-type='method'><a href="module-CommonTools.html#.importProducts">importProducts</a></li><li data-type='method'><a href="module-CommonTools.html#.isAdmin">isAdmin</a></li></ul></li><li><a href="module-Shop.html">Shop</a><ul class='methods'><li data-type='method'><a href="module-Shop.html#.init">init</a></li></ul></li><li><a href="module-Stats.html">Stats</a><ul class='methods'><li data-type='method'><a href="module-Stats.html#.init">init</a></li></ul></li><li><a href="module-User.html">User</a><ul class='methods'><li data-type='method'><a href="module-User.html#.init">init</a></li></ul></li></ul></div>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">endpoints/user.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>const db = require("../utils/databaseHelper");
+const cryptoHelper = require("../utils/cryptoHelper");
+const corsConfig = require("../utils/corsConfigHelper");
+const commonTools = require("./common");
+
+const httpOkCode = 200;
+const badRequestCode = 400;
+const authorizationErrCode = 401;
+
+const route = "/user/";
+
+/**
+ * User related endpoints
+ * @module User
+ */
+
+/**
+ * Initializes all requests for the shop user functions.
+ * @param {app} app An instance of express.
+ * @param {pool} connectionPool The connection pool being used.
+ * @author Noah Visser
+ * @private
+ */
+function init(app, connectionPool) {
+    console.log("User repository initializing...");
+
+    app.post(`${route}login`, (req, res) => login(connectionPool, req, res));
+
+    app.post(`${route}register`, (req, res) => register(connectionPool, req, res));
+
+    app.post(`${route}passwordReset`, (req, res) => passwordReset(connectionPool, req, res));
+
+    console.log("User repository initialized!")
+}
+
+/**
+ * Checks the database for username/password match
+ * If there is no match we return an error string
+ * @param {pool} connectionPool The current connectionPool
+ * @param {req} req The request.
+ * @param {res} res The response.
+ * @author Marc Specht, Noah Visser
+ * @private
+ */
+function login(connectionPool, req, res) {
+    const seatNumber = req.body.username.toLocaleUpperCase();
+    const password = cryptoHelper.getHashedPassword(req.body.password);
+    const ip = req.ip;
+
+    commonTools.checkIfBlocked(connectionPool, ip, seatNumber, (boolean) => {
+        if (boolean) {
+            res.status(authorizationErrCode).json({reason: "This user has been blocked."});
+            return;
+        }
+
+        db.handleQuery(connectionPool, {
+            query: "SELECT seat_number, password FROM user WHERE seat_number = ? AND password = ?",
+            values: [seatNumber, password]
+        }, (data) => {
+            if (data.length === 1) {
+                //return just the username for now, never send password back!
+                res.status(httpOkCode).json({"seat_number": data[0].seat_number});
+            } else {
+                //wrong username
+                res.status(authorizationErrCode).json({reason: "Wrong seat number and/or password"});
+
+            }
+
+        }, (err) => res.status(badRequestCode).json({reason: err}));
+    });
+}
+
+/**
+ * Register a new account
+ * @param {pool} connectionPool The current connectionPool
+ * @param {req} req The request.
+ * @param {res} res The response.
+ * @author Marc Specht, Tico Vermeer
+ * @private
+ */
+function register(connectionPool, req, res) {
+    const seatNumber = req.body.username.toLocaleUpperCase();
+    const password = cryptoHelper.getHashedPassword(req.body.password);
+    const ip = req.ip;
+
+    console.log(ip);
+
+    commonTools.checkIfBlocked(connectionPool, ip, 0, (boolean) => {
+        if (boolean) {
+            res.status(authorizationErrCode).json({reason: "This user has been blocked."});
+            return;
+        }
+
+        db.handleQuery(connectionPool, {
+            query: "INSERT INTO user(seat_number, password, ipv6) VALUES (?,?,INET6_ATON(?))",
+            values: [seatNumber, password, ip]
+        }, (data) => {
+            // if (data.insertId) {
+            res.status(httpOkCode).json(data);
+            // }
+        }, (err) => {
+            res.status(badRequestCode).json({reason: err})
+        });
+    });
+}
+
+
+/**
+ * Check if user has been blocked, checks if the seat number is in the database and puts a notification in the database.
+ * @param {pool} connectionPool.
+ * @param {req} req The request.
+ * @param {res} res The response.
+ * @private
+ */
+function passwordReset(connectionPool, req, res) {
+    const seatNumber = req.body.username.toLocaleUpperCase();
+    const ip = req.ip;
+
+    commonTools.checkIfBlocked(connectionPool, ip, seatNumber, (boolean) => {
+        if (boolean) {
+            res.status(authorizationErrCode).json({reason: "This user has been blocked."});
+            return;
+        }
+
+        db.handleQuery(connectionPool, {
+            query: "SELECT seat_number FROM user WHERE seat_number = ?",
+            values: [seatNumber]
+        }, (data) => {
+            if (data.length === 1) {
+                res.status(httpOkCode).json({"seat_number": data[0].seat_number});
+                db.handleQuery(connectionPool, {
+                    query: "INSERT INTO notifications(message, Seat_number) VALUES (?,?)",
+                    values: [ 1, seatNumber]
+                }, (data) => {
+                    if (data.length === 1) {
+                        //return just the username
+                        res.status(httpOkCode).json({"seat_number": data[0].seat_number});
+                    }
+                }, (err) => res.status(badRequestCode).json({reason: err}));
+            } else {
+                //wrong username
+                res.status(authorizationErrCode).json({reason: "This seat number has not been registered yet."});
+
+            }
+        }, (err) => res.status(badRequestCode).json({reason: err}));
+
+    });
+}
+
+
+module.exports = {
+    /**
+     * Initializes all requests for the shop user functions.
+     * @function
+     * @param {Object} app An instance of express.
+     * @param {Pool} connectionPool The connection pool being used.
+     * @author Noah Visser
+     */
+    init
+};</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+  
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+<script>
+var list = [{"title":"Admin","link":"<a href=\"module-Admin.html\">Admin</a>"},{"title":"module:Admin.init","link":"<a href=\"module-Admin.html#.init\">module:Admin.init &rtrif; undefined</a>"},{"title":"App","link":"<a href=\"module-App.html\">App</a>"},{"title":"Cleanup","link":"<a href=\"module-Cleanup.html\">Cleanup</a>"},{"title":"CommonTools","link":"<a href=\"module-CommonTools.html\">CommonTools</a>"},{"title":"module:CommonTools.checkIfBlocked","link":"<a href=\"module-CommonTools.html#.checkIfBlocked\">module:CommonTools.checkIfBlocked &rtrif; undefined</a>"},{"title":"module:CommonTools.generateCSV","link":"<a href=\"module-CommonTools.html#.generateCSV\">module:CommonTools.generateCSV &rtrif; undefined</a>"},{"title":"module:CommonTools.getAllProducts","link":"<a href=\"module-CommonTools.html#.getAllProducts\">module:CommonTools.getAllProducts &rtrif; undefined</a>"},{"title":"module:CommonTools.importProducts","link":"<a href=\"module-CommonTools.html#.importProducts\">module:CommonTools.importProducts &rtrif; undefined</a>"},{"title":"module:CommonTools.isAdmin","link":"<a href=\"module-CommonTools.html#.isAdmin\">module:CommonTools.isAdmin &rtrif; undefined</a>"},{"title":"Shop","link":"<a href=\"module-Shop.html\">Shop</a>"},{"title":"module:Shop.init","link":"<a href=\"module-Shop.html#.init\">module:Shop.init &rtrif; undefined</a>"},{"title":"Stats","link":"<a href=\"module-Stats.html\">Stats</a>"},{"title":"module:Stats.init","link":"<a href=\"module-Stats.html#.init\">module:Stats.init &rtrif; undefined</a>"},{"title":"User","link":"<a href=\"module-User.html\">User</a>"},{"title":"module:User.init","link":"<a href=\"module-User.html#.init\">module:User.init &rtrif; undefined</a>"}];
+setupSearch(list)
+</script>
+
+ 
+<script type="text/javascript" src="scripts/misc.js"></script>
+</body>
+</html>

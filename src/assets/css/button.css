@@ -1,0 +1,124 @@
+.btn {
+    border-radius: 100px;
+    font-family: "Open Sans", "Arial", sans-serif;
+    font-weight: bold;
+}
+
+.btn:hover{
+    cursor: pointer;
+}
+
+.btn-block {
+    color: var(--color-red);
+}
+
+.btn-block:hover {
+    background-color: var(--color-light-grey);
+    color: var(--color-red);
+}
+
+.btn-primary {
+    background-color: transparent;
+    border: 1px solid var(--color-green);
+    color: var(--color-green);
+}
+
+.btn-primary:hover {
+    background-color: var(--color-green);
+    border: 1px solid var(--color-green);
+    color: var(--color-white);
+}
+
+.btn-solid {
+    background-color: var(--color-green);
+    border: 1px solid var(--color-green);
+    color: var(--color-white);
+}
+
+.btn-solid {
+    background-color: var(--color-green--dark);
+    border: 1px solid var(--color-green--dark);
+    color: var(--color-white);
+}
+
+.input-group-text:hover {
+    background-color: var(--color-grey);
+    cursor: pointer;
+    color: var(--color-white);
+}
+
+.btn-shopping-cart {
+    background-color: var(--color-green);
+    color: var(--color-white);
+    transition: background-color .2s, box-shadow .2s;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+}
+
+.btn-shopping-cart-after:after {
+    transition: transform 1s ease-in-out;
+    content: attr(data-after);
+    border-radius: 100px;
+    position: absolute;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 25px;
+    height: 25px;
+    top: 0;
+    left: 0;
+    background-color: var(--color-red);
+    color: var(--color-white);
+    transform: scale(1);
+}
+
+.btn-shopping-cart-after--add:after {
+    transition: transform 1s ease-in-out;
+    content: attr(data-after);
+    border-radius: 100px;
+    position: absolute;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 25px;
+    height: 25px;
+    top: 0;
+    left: 0;
+    background-color: var(--color-red);
+    color: var(--color-white);
+    transform: scale(3);
+}
+
+.btn-password-reset{
+    right: 0;
+    padding: 5px;
+    position: absolute;
+    color: var(--color-red);
+    font-weight: normal !important;
+    cursor: pointer;
+    font-size: small;
+}
+
+.btn-filter{
+    font-weight: normal;
+    border-radius: 0;
+    background-color: transparent;
+    color: var(--color-grey);
+}
+
+.btn-filter:hover, .btn-filter.active {
+    background-color: var(--color-light-grey);
+    text-decoration: underline;
+}
+
+@media only screen and (min-width: 576px) {
+    .btn-shopping-cart:hover {
+        background-color: var(--color-green--dark);
+        cursor: pointer;
+        box-shadow: 0 1px 10px rgba(0, 0, 0, 0.2);
+    }
+}

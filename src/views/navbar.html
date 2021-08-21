@@ -1,0 +1,23 @@
+<nav class="static-top shadow">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center">
+            <a id="navbarBackButton" class="nav-link nav-back d-flex align-items-center" data-controller="back" href="#">
+                <span id="left-arrow" class="fa fa-long-arrow-alt-left"></span>
+            </a>
+            <a class="nav-link text-center d-flex align-items-center app-logo" data-controller="home" href="#">
+                <img src="assets/img/tulip.png" height="30" alt="Tulip Air logo">
+            </a>
+            <a class="nav-link nav-shopping-cart position-relative d-flex align-items-center" data-controller="shoppingCart" href="#">
+                <span class="fa fa-shopping-cart"></span>
+            </a>
+        </div>
+    </div>
+</nav>
+<div class="bg-light" id="adminNav">
+    <div class="container d-flex">
+        <a class="nav-link admin-item" data-controller="orders" href="#">Manage orders</a>
+        <a class="nav-link admin-item" data-controller="manageUser" href="#">Manage Users</a>
+        <a class="nav-link admin-item" data-controller="manageData" href="#">Manage data</a>
+        <a class="nav-link admin-item" data-controller="notifications" href="#">Notifications</a>
+    </div>
+</div>

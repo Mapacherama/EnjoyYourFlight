@@ -1,0 +1,25 @@
+/**
+This document contains all css variables. Use this in all css files.
+@author Marc Specht
+ */
+
+:root{
+    /*Colors*/
+    --color-green:          #0F5B26;
+    --color-green--dark:    #144522;
+    --color-red:            #E12222;
+    --color-light-grey:     #EFEFEF;
+    --color-grey:           #525252;
+    --color-white:          #FFFFFF;
+    --color-cold:           #0014FF;
+
+    /*Font sizes*/
+    --font-size:            1rem;
+    --font-size--small:     .8rem;
+
+    /*Responsive sizes (Not working with media queries)*/
+    --screen-small:         576px;
+    --screen-medium:        768px;
+    --screen-large:         992px;
+    --screen-extra-large:   1200px;
+}

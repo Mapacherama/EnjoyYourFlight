@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>endpoints/admin.js</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <script src="scripts/search.js"></script>
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.4.5/fuse.min.js"></script> -->
+    <script src="scripts/fuse.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+    <link type="text/css" rel="stylesheet" href="styles/clean-jsdoc-theme.css">
+    
+    
+    
+<svg aria-hidden="true" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="display:none">
+    <defs>
+        <symbol id="copy-icon" viewbox="0 0 488.3 488.3">
+            <g>
+                <path d="M314.25,85.4h-227c-21.3,0-38.6,17.3-38.6,38.6v325.7c0,21.3,17.3,38.6,38.6,38.6h227c21.3,0,38.6-17.3,38.6-38.6V124    C352.75,102.7,335.45,85.4,314.25,85.4z M325.75,449.6c0,6.4-5.2,11.6-11.6,11.6h-227c-6.4,0-11.6-5.2-11.6-11.6V124    c0-6.4,5.2-11.6,11.6-11.6h227c6.4,0,11.6,5.2,11.6,11.6V449.6z"/>
+                <path d="M401.05,0h-227c-21.3,0-38.6,17.3-38.6,38.6c0,7.5,6,13.5,13.5,13.5s13.5-6,13.5-13.5c0-6.4,5.2-11.6,11.6-11.6h227    c6.4,0,11.6,5.2,11.6,11.6v325.7c0,6.4-5.2,11.6-11.6,11.6c-7.5,0-13.5,6-13.5,13.5s6,13.5,13.5,13.5c21.3,0,38.6-17.3,38.6-38.6    V38.6C439.65,17.3,422.35,0,401.05,0z"/>
+            </g>
+        </symbol>
+    </defs>
+</svg>
+
+</head>
+<body>
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <h2><a href="index.html"><div class="text">Home</div></a></h2><div class="search-box"><input type="text" placeholder="Search..." id="search-box" /><div class="search-item-container" id="search-item-container"><ul class="search-item-ul" id="search-item-ul"></ul></div></div><div class="sidebar-list-div"><h3>Modules</h3><ul><li><a href="module-Admin.html">Admin</a><ul class='methods'><li data-type='method'><a href="module-Admin.html#.init">init</a></li></ul></li><li><a href="module-App.html">App</a></li><li><a href="module-Cleanup.html">Cleanup</a></li><li><a href="module-CommonTools.html">CommonTools</a><ul class='methods'><li data-type='method'><a href="module-CommonTools.html#.checkIfBlocked">checkIfBlocked</a></li><li data-type='method'><a href="module-CommonTools.html#.generateCSV">generateCSV</a></li><li data-type='method'><a href="module-CommonTools.html#.getAllProducts">getAllProducts</a></li><li data-type='method'><a href="module-CommonTools.html#.importProducts">importProducts</a></li><li data-type='method'><a href="module-CommonTools.html#.isAdmin">isAdmin</a></li></ul></li><li><a href="module-Shop.html">Shop</a><ul class='methods'><li data-type='method'><a href="module-Shop.html#.init">init</a></li></ul></li><li><a href="module-Stats.html">Stats</a><ul class='methods'><li data-type='method'><a href="module-Stats.html#.init">init</a></li></ul></li><li><a href="module-User.html">User</a><ul class='methods'><li data-type='method'><a href="module-User.html#.init">init</a></li></ul></li></ul></div>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">endpoints/admin.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>const db = require("../utils/databaseHelper");
+const cryptoHelper = require("../utils/cryptoHelper");
+const corsConfig = require("../utils/corsConfigHelper");
+const commonTools = require("./common");
+
+const httpOkCode = 200;
+const badRequestCode = 400;
+const authorizationErrCode = 401;
+
+const route = "/admin/";
+
+/**
+ * Admin related endpoints
+ * @module Admin
+ */
+
+/**
+ * Initializes all the possible requests for the admin functions.
+ * @param {app} app An instance of express.
+ * @param {pool} connectionPool The connection pool being used.
+ * @author Noah Visser
+ * @private
+ */
+function init(app, connectionPool) {
+    console.log("Admin repository initializing...");
+
+    /**
+     * @api {post} /admin/users Request all user seat numbers and block states.
+     * @apiName GetUsers
+     * @apiGroup Admin
+     *
+     * @apiParam {String} session The user session.
+     *
+     * @apiSuccess {Object} seat_number
+     * @apiSuccess {Number} is_blocked  Whether the
+     */
+    app.post(`${route}users`, (req, res) =>
+        commonTools.isAdmin(connectionPool, req.body.session, () => getUsers(connectionPool, req, res), () => res.status(badRequestCode).json({reason: "User isn't an admin."}))
+    );
+
+    /**
+     * @api {get} /user/:id Request User information
+     * @apiName GetUser
+     * @apiGroup User
+     *
+     * @apiParam {Number} id Users unique ID.
+     *
+     * @apiSuccess {String} firstname Firstname of the User.
+     * @apiSuccess {String} lastname  Lastname of the User.
+     */
+    app.post(`${route}updateName`, (req, res) =>
+        commonTools.isAdmin(connectionPool, req.body.session, () => updateUsername(connectionPool, req, res), () => res.status(badRequestCode).json({reason: "User isn't an admin."}))
+    );
+
+    /**
+     * @api {get} /user/:id Request User information
+     * @apiName GetUser
+     * @apiGroup User
+     *
+     * @apiParam {Number} id Users unique ID.
+     *
+     * @apiSuccess {String} firstname Firstname of the User.
+     * @apiSuccess {String} lastname  Lastname of the User.
+     */
+    app.post(`${route}updatePassword`, (req, res) =>
+        commonTools.isAdmin(connectionPool, req.body.session, () => updateUserPassword(connectionPool, req, res), () => res.status(badRequestCode).json({reason: "User isn't an admin."}))
+    );
+
+    /**
+     * @api {get} /user/:id Request User information
+     * @apiName GetUser
+     * @apiGroup User
+     *
+     * @apiParam {Number} id Users unique ID.
+     *
+     * @apiSuccess {String} firstname Firstname of the User.
+     * @apiSuccess {String} lastname  Lastname of the User.
+     */
+    app.post(`${route}deleteUser`, (req, res) =>
+        commonTools.isAdmin(connectionPool, req.body.session, () => deleteUser(connectionPool, req, res), () => res.status(badRequestCode).json({reason: "User isn't an admin."}))
+    );
+
+    /**
+     * @api {get} /user/:id Request User information
+     * @apiName GetUser
+     * @apiGroup User
+     *
+     * @apiParam {Number} id Users unique ID.
+     *
+     * @apiSuccess {String} firstname Firstname of the User.
+     * @apiSuccess {String} lastname  Lastname of the User.
+     */
+    app.post(`${route}blockUser`, (req, res) =>
+        commonTools.isAdmin(connectionPool, req.body.session, () => blockUser(connectionPool, req, res), () => res.status(badRequestCode).json({reason: "User isn't an admin."}))
+    );
+
+    /**
+     * @api {get} /user/:id Request User information
+     * @apiName GetUser
+     * @apiGroup User
+     *
+     * @apiParam {Number} id Users unique ID.
+     *
+     * @apiSuccess {String} firstname Firstname of the User.
+     * @apiSuccess {String} lastname  Lastname of the User.
+     */
+    app.post(`${route}addProduct`, (req, res) =>
+        commonTools.isAdmin(connectionPool, req.body.session, () => addProduct(connectionPool, req, res), () => res.status(badRequestCode).json({reason: "User isn't an admin."}))
+    );
+
+    /**
+     * @api {get} /user/:id Request User information
+     * @apiName GetUser
+     * @apiGroup User
+     *
+     * @apiParam {Number} id Users unique ID.
+     *
+     * @apiSuccess {String} firstname Firstname of the User.
+     * @apiSuccess {String} lastname  Lastname of the User.
+     */
+    app.post(`${route}isAdmin`, (req, res) =>
+        commonTools.isAdmin(connectionPool, req.body.session, () => res.status(httpOkCode).json(true), () => res.status(httpOkCode).json(false))
+    );
+
+    /**
+     * @api {get} /user/:id Request User information
+     * @apiName GetUser
+     * @apiGroup User
+     *
+     * @apiParam {Number} id Users unique ID.
+     *
+     * @apiSuccess {String} firstname Firstname of the User.
+     * @apiSuccess {String} lastname  Lastname of the User.
+     */
+    app.post(`${route}getOpenOrders`, (req, res) =>
+        commonTools.isAdmin(connectionPool, req.body.session, () => getOpenOrders(connectionPool, req, res), () => res.status(httpOkCode).json(false))
+    );
+
+    /**
+     * @api {get} /user/:id Request User information
+     * @apiName GetUser
+     * @apiGroup User
+     *
+     * @apiParam {Number} id Users unique ID.
+     *
+     * @apiSuccess {String} firstname Firstname of the User.
+     * @apiSuccess {String} lastname  Lastname of the User.
+     */
+    app.post(`${route}setOrder`, (req, res) =>
+        commonTools.isAdmin(connectionPool, req.body.session, () => setOrder(connectionPool, req, res), () => res.status(httpOkCode).json(false))
+    );
+
+    /**
+     * @api {get} /user/:id Request User information
+     * @apiName GetUser
+     * @apiGroup User
+     *
+     * @apiParam {Number} id Users unique ID.
+     *
+     * @apiSuccess {String} firstname Firstname of the User.
+     * @apiSuccess {String} lastname  Lastname of the User.
+     */
+    app.post(`${route}getNotification`, (req, res) =>
+        commonTools.isAdmin(connectionPool, req.body.session, () => getNotification(connectionPool, req, res), () => res.status(httpOkCode).json(false))
+    );
+
+    /**
+     * @api {get} /user/:id Request User information
+     * @apiName GetUser
+     * @apiGroup User
+     *
+     * @apiParam {Number} id Users unique ID.
+     *
+     * @apiSuccess {String} firstname Firstname of the User.
+     * @apiSuccess {String} lastname  Lastname of the User.
+     */
+    app.post(`${route}setNotification`, (req, res) => setNotification(connectionPool, req, res));
+
+    /**
+     * @api {get} /user/:id Request User information
+     * @apiName GetUser
+     * @apiGroup User
+     *
+     * @apiParam {Number} id Users unique ID.
+     *
+     * @apiSuccess {String} firstname Firstname of the User.
+     * @apiSuccess {String} lastname  Lastname of the User.
+     */
+    app.post(`${route}readNotification`, (req, res) =>
+        commonTools.isAdmin(connectionPool, req.body.session, () => readNotification(connectionPool, req, res), () => res.status(httpOkCode).json(false))
+    );
+
+    console.log("Admin repository initialized!")
+}
+
+/**
+ * @author Noah Visser
+ *
+ * Fetches all users from the database, and sends them back.
+ * @param {pool} connectionPool The connection pool being used.
+ * @param {req} req The request.
+ * @param {res} res The response.
+ * @private
+ */
+function getUsers(connectionPool, req, res) {
+    db.handleQuery(connectionPool, {
+        query: "SELECT seat_number, is_blocked FROM user"
+    }, (data) => {
+        res.status(httpOkCode).json(data);
+    }, (err) => res.status(badRequestCode).json({reason: err}));
+}
+
+/**
+ * @author Noah Visser
+ *
+ * Updates an id in the database and sends back 'true' if it's been successful.
+ * @param {pool} connectionPool The connection pool being used.
+ * @param {req} req The request.
+ * @param {res} res The response.
+ * @private
+ */
+function updateUsername(connectionPool, req, res) {
+    const oldSeat = req.body.oldSeat;
+    const newSeat = req.body.newSeat.toLocaleUpperCase();
+
+    db.handleQuery(connectionPool, {
+        query: "UPDATE user SET seat_number=? WHERE seat_number=?",
+        values: [newSeat, oldSeat]
+    }, (data) => {
+        res.status(httpOkCode).json(true);
+    }, (err) => res.status(badRequestCode).json({reason: err}));
+}
+
+/**
+ * @author Noah Visser
+ *
+ * Updates a password in the database and sends back 'true' if it's been successful.
+ * @param {pool} connectionPool The connection pool being used.
+ * @param {req} req The request.
+ * @param {res} res The response.
+ * @private
+ */
+function updateUserPassword(connectionPool, req, res) {
+    const seatNr = req.body.id;
+    const password = cryptoHelper.getHashedPassword(req.body.password);
+
+    db.handleQuery(connectionPool, {
+        query: "UPDATE user SET password=? WHERE seat_number=?",
+        values: [password, seatNr]
+    }, (data) => {
+        res.status(httpOkCode).json(true);
+    }, (err) => res.status(badRequestCode).json({reason: err}));
+}
+
+/**
+ * Deletes an entry from the user table in the database. Sends back 'true' if it's been successful.
+ * @param {pool} connectionPool The connection pool being used.
+ * @param {req} req The request.
+ * @param {res} res The response.
+ * @author Noah Visser
+ * @private
+ */
+function deleteUser(connectionPool, req, res) {
+    const id = req.body.id;
+
+    db.handleQuery(connectionPool, {
+        query: "DELETE FROM user WHERE seat_number=?",
+        values: [id]
+    }, (data) => {
+        res.status(httpOkCode).json(true);
+    }, (err) => res.status(badRequestCode).json({reason: err}));
+}
+
+/**
+ * Blocks a user in the user table in the database. Sends back 'true' if it's been successful.
+ * @param {pool} connectionPool The connection pool being used.
+ * @param {req} req The request.
+ * @param {res} res The response.
+ * @author Noah Visser
+ * @private
+ */
+function blockUser(connectionPool, req, res) {
+    const seat = req.body.seat;
+    const blockState = req.body.blockState ? 1 : 0;
+    db.handleQuery(connectionPool, {
+        query: "UPDATE user SET is_blocked=? WHERE seat_number=?",
+        values: [blockState, seat]
+    }, (data) => {
+        res.status(httpOkCode).json(true);
+    }, (err) => res.status(badRequestCode).json({reason: err}));
+}
+
+/**
+ * Get all unhandled orders
+ * @param {pool} connectionPool The connection pool being used.
+ * @param {req} req The request.
+ * @param {res} res The response.
+ * @author Marc Specht
+ * @private
+ */
+function getOpenOrders(connectionPool, req, res) {
+    db.handleQuery(connectionPool, {
+        query: "SELECT order_number, seat_number, u.id, title, price, u.quantity FROM userproduct u INNER JOIN product p ON u.id = p.id WHERE order_status = 0",
+    }, (data) => {
+        res.status(httpOkCode).json(data);
+    }, (err) => res.status(badRequestCode).json({reason: err}));
+}
+
+/**
+ * Update and order status
+ * @param {pool} connectionPool The connection pool being used.
+ * @param {req} req The request.
+ * @param {res} res The response.
+ * @author Marc Specht
+ * @private
+ */
+function setOrder(connectionPool, req, res) {
+    const orderNumber = req.body.orderNumber; //id + quantity
+    const status = req.body.status;
+
+    db.handleQuery(connectionPool, {
+        query: "UPDATE userproduct SET order_status = ? WHERE order_number = ?",
+        values: [status, orderNumber]
+    }, (data) => {
+        res.status(httpOkCode).json(data);
+    }, (err) => {
+        res.status(badRequestCode).json({reason: err})
+    });
+}
+
+/**
+ * Gets all notifications from the database
+ * @param {pool} connectionPool The connection pool being used.
+ * @param {req} req The request.
+ * @param {res} res The response.
+ * @author Jerôme Tesselaar
+ * @private
+ */
+
+function getNotification(connectionPool, req, res) {
+    db.handleQuery(connectionPool, {
+        query: "SELECT message, Seat_number FROM notifications"
+    }, (data) => {
+        res.status(httpOkCode).json(data);
+    }, (err) => res.status(badRequestCode).json({reason: err}));
+}
+
+
+/**
+ * Sends a notification message to the notification table of the database, takes two variables: one for the message part,
+ * and another for the seat number of the user that sends the message.
+ * @param connectionPool The connection pool being used.
+ * @param {req} req The request.
+ * @param {res} res The response.
+ * @author Jerôme Tesselaar
+ * @private
+ */
+
+function setNotification(connectionPool, req, res) {
+    const message = req.body.message;
+    const seatNumber = req.body.seatNumber;
+    db.handleQuery(connectionPool, {
+        query: "INSERT INTO notifications (message, Seat_number) VALUES (?, ?) ",
+        values: [message, seatNumber]
+    }, (data) => {
+        res.status(httpOkCode).json(data);
+    }, (err) => res.status(badRequestCode).json({reason: err}));
+}
+
+/**
+ * Delete's the notification from the notification table, gets deleted based on two variables: the message and secondly
+ * the seat number of the user.
+ * @param {pool} connectionPool
+ * @param {req} req The request.
+ * @param {res} res The response.
+ * @author Jerôme Tesselaar
+ * @private
+ */
+
+function readNotification(connectionPool, req, res) {
+    const message = req.body.message;
+    const seatNumber = req.body.seatNumber;
+
+    db.handleQuery(connectionPool, {
+        query: "DELETE FROM notifications WHERE message = ? AND Seat_number = ?",
+        values: [message, seatNumber]
+    }, (data) => {
+        res.status(httpOkCode).json(data);
+    }, (err) => res.status(badRequestCode).json({reason: err}));
+}
+
+module.exports = {
+    /**
+     * Initializes all the possible requests for the admin functions.
+     * @function
+     * @param {Object} app An instance of express.
+     * @param {Pool} connectionPool The connection pool being used.
+     * @author Noah Visser
+     */
+    init
+};</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+  
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+<script>
+var list = [{"title":"Admin","link":"<a href=\"module-Admin.html\">Admin</a>"},{"title":"module:Admin.init","link":"<a href=\"module-Admin.html#.init\">module:Admin.init &rtrif; undefined</a>"},{"title":"App","link":"<a href=\"module-App.html\">App</a>"},{"title":"Cleanup","link":"<a href=\"module-Cleanup.html\">Cleanup</a>"},{"title":"CommonTools","link":"<a href=\"module-CommonTools.html\">CommonTools</a>"},{"title":"module:CommonTools.checkIfBlocked","link":"<a href=\"module-CommonTools.html#.checkIfBlocked\">module:CommonTools.checkIfBlocked &rtrif; undefined</a>"},{"title":"module:CommonTools.generateCSV","link":"<a href=\"module-CommonTools.html#.generateCSV\">module:CommonTools.generateCSV &rtrif; undefined</a>"},{"title":"module:CommonTools.getAllProducts","link":"<a href=\"module-CommonTools.html#.getAllProducts\">module:CommonTools.getAllProducts &rtrif; undefined</a>"},{"title":"module:CommonTools.importProducts","link":"<a href=\"module-CommonTools.html#.importProducts\">module:CommonTools.importProducts &rtrif; undefined</a>"},{"title":"module:CommonTools.isAdmin","link":"<a href=\"module-CommonTools.html#.isAdmin\">module:CommonTools.isAdmin &rtrif; undefined</a>"},{"title":"Shop","link":"<a href=\"module-Shop.html\">Shop</a>"},{"title":"module:Shop.init","link":"<a href=\"module-Shop.html#.init\">module:Shop.init &rtrif; undefined</a>"},{"title":"Stats","link":"<a href=\"module-Stats.html\">Stats</a>"},{"title":"module:Stats.init","link":"<a href=\"module-Stats.html#.init\">module:Stats.init &rtrif; undefined</a>"},{"title":"User","link":"<a href=\"module-User.html\">User</a>"},{"title":"module:User.init","link":"<a href=\"module-User.html#.init\">module:User.init &rtrif; undefined</a>"}];
+setupSearch(list)
+</script>
+
+ 
+<script type="text/javascript" src="scripts/misc.js"></script>
+</body>
+</html>

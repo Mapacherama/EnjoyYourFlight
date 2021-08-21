@@ -1,0 +1,52 @@
+<div class="store-background-wrapper container">
+    <!-- // TODO: Tulip Air logo toevoegen   -->
+    <!--    <img src="">-->
+    <!--    <div class="row">-->
+    <div class="col mb-5 mt-5">
+        <h3 id="Shopping-cart-title">Shopping cart</h3>
+    </div>
+    <!--    </div>-->
+
+    <div class="container">
+        <div class="shopping-cart-tablediv">
+            <div class="row">
+                <div class="shopping-cart-table w-100 col-12 col-lg-8">
+                    <div class="shopping-cart-template grid grid--shopping-cart--product">
+                        <img class="img-fluid mh-100 product-image--cart" src="" alt=""/>
+                        <div>
+                            <h4 class="product-title d-block">PRODUCTNAAM</h4>
+                            <p class="product-description">PRODUCTDESCRIPTION</p>
+                            <button class="product-remove product-remove--mobile btn btn-danger"><span class="fa fa-trash-alt"></span></button>
+                        </div>
+                        <div class="product-price circle p-0 text-center shadow-sm grid-order--2 position-relative"></div>
+                        <div class="product-quantity grid-self-center d-flex flex-column">
+                            <button class="plus-btn text-center shop-quantity-button" name="button" type="button">+</button>
+                            <input class="product-quantity shop-button bg-light" disabled="disabled" name="name" type="text"
+                                   value="1"/>
+                            <button class="minus-btn shop-quantity-button" name="button" type="button">-</button>
+                        </div>
+                        <button class="btn product-remove product-remove--medium"><span class="fa fa-trash-alt"></span></button>
+                    </div>
+                </div>
+
+                <div class="d-block d-lg-none m-5 spacer w-100"></div>
+                <div class="d-block d-lg-none m-5 spacer w-100"></div>
+                
+                <!--Order summary-->
+                <div class="order-summary shadow-sm col-12 col-lg-4 bg-light">
+                    <h4>Order summary</h4>
+                    <hr>
+                    <div class="inline">
+                        <p id="totalItems" class="d-inline-block">Items (0)</p>
+                        <p class="d-inline-block float-right" id="totalPrice">€ 0,00</p>
+                    </div>
+                    <button id="checkoutButton" class="btn btn-block btn-solid"><span
+                            class="fa fa-shopping-cart"></span>&nbsp;Continue
+                        to checkout
+                    </button>
+                    <button class="btn btn-block backToStoreButton">Back to store</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>common.js</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <script src="scripts/search.js"></script>
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.4.5/fuse.min.js"></script> -->
+    <script src="scripts/fuse.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+    <link type="text/css" rel="stylesheet" href="styles/clean-jsdoc-theme.css">
+    
+    
+    
+<svg aria-hidden="true" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="display:none">
+    <defs>
+        <symbol id="copy-icon" viewbox="0 0 488.3 488.3">
+            <g>
+                <path d="M314.25,85.4h-227c-21.3,0-38.6,17.3-38.6,38.6v325.7c0,21.3,17.3,38.6,38.6,38.6h227c21.3,0,38.6-17.3,38.6-38.6V124    C352.75,102.7,335.45,85.4,314.25,85.4z M325.75,449.6c0,6.4-5.2,11.6-11.6,11.6h-227c-6.4,0-11.6-5.2-11.6-11.6V124    c0-6.4,5.2-11.6,11.6-11.6h227c6.4,0,11.6,5.2,11.6,11.6V449.6z"/>
+                <path d="M401.05,0h-227c-21.3,0-38.6,17.3-38.6,38.6c0,7.5,6,13.5,13.5,13.5s13.5-6,13.5-13.5c0-6.4,5.2-11.6,11.6-11.6h227    c6.4,0,11.6,5.2,11.6,11.6v325.7c0,6.4-5.2,11.6-11.6,11.6c-7.5,0-13.5,6-13.5,13.5s6,13.5,13.5,13.5c21.3,0,38.6-17.3,38.6-38.6    V38.6C439.65,17.3,422.35,0,401.05,0z"/>
+            </g>
+        </symbol>
+    </defs>
+</svg>
+
+</head>
+<body>
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <h2><a href="index.html"><div class="text">Home</div></a></h2><div class="search-box"><input type="text" placeholder="Search..." id="search-box" /><div class="search-item-container" id="search-item-container"><ul class="search-item-ul" id="search-item-ul"></ul></div></div><div class="sidebar-list-div"><h3>Modules</h3><ul><li><a href="module-admin.html">admin</a><ul class='methods'><li data-type='method'><a href="module-admin.html#.init">init</a></li></ul></li><li><a href="module-common.html">common</a><ul class='methods'><li data-type='method'><a href="module-common.html#.checkIfBlocked">checkIfBlocked</a></li><li data-type='method'><a href="module-common.html#.generateCSV">generateCSV</a></li><li data-type='method'><a href="module-common.html#.getAllProducts">getAllProducts</a></li><li data-type='method'><a href="module-common.html#.importProducts">importProducts</a></li><li data-type='method'><a href="module-common.html#.isAdmin">isAdmin</a></li></ul></li><li><a href="module-shop.html">shop</a><ul class='methods'><li data-type='method'><a href="module-shop.html#.init">init</a></li></ul></li><li><a href="module-stats.html">stats</a><ul class='methods'><li data-type='method'><a href="module-stats.html#.init">init</a></li></ul></li><li><a href="module-user.html">user</a><ul class='methods'><li data-type='method'><a href="module-user.html#.init">init</a></li></ul></li></ul></div>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">common.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>const db = require("../utils/databaseHelper");
+const cryptoHelper = require("../utils/cryptoHelper");
+const corsConfig = require("../utils/corsConfigHelper");
+
+const httpOkCode = 200;
+const badRequestCode = 400;
+const authorizationErrCode = 401;
+
+// The time to hold a file until deletion. (In milliseconds)
+const FILE_HOLD_TIME = 30000;
+
+const fs = require('fs');
+const csv = require("fast-csv");
+
+/**
+ * Tools that are commonly used by the endpoints.
+ * @module
+ */
+
+/**
+ * Checks whether a user is an admin.
+ * @param {pool} connectionPool The connection pool being used.
+ * @param {number} name The id of the user.
+ * @param {callback} callback The callback to be called when the query has been successful.
+ * @param {callback} err The callback to be called when an error has occurred.
+ * @author Noah Visser
+ * @private
+ */
+function isAdmin(connectionPool, name, callback, err) {
+    db.handleQuery(connectionPool, {
+        query: "SELECT is_admin FROM user WHERE seat_number=?",
+        values: [name]
+    }, (data) => {
+        console.log(data);
+        try {
+            if (data[0].is_admin === 1) callback(true);
+            else err(new Error("User isn't an administrator."))
+        } catch (e) {
+            err(e);
+        }
+    }, (err) => {
+        try {
+            err(err);
+        }
+        catch(e){
+            // Do nothing
+        }
+    });
+}
+
+//TODO: Add error callback.
+/**
+ * Checks whether a user has been blocked.
+ * @param {pool} connectionPool The connection pool being used.
+ * @param {string} ip The IPv6 of the user.
+ * @param {number} seat The id of the user.
+ * @param {callback} callback The callback to be called when the query has been successful.
+ * @author Noah Visser
+ * @private
+ */
+function checkIfBlocked(connectionPool, ip, seat, callback) {
+    let blocked = false;
+    db.handleQuery(connectionPool, {
+        query: "SELECT is_blocked FROM user WHERE seat_number=?",
+        values: [seat]
+    }, (data) => {
+        // for (let i = 0; i &lt; data.length; i++) if (data[i].is_blocked === 1) blocked = true;
+        callback(blocked);
+    });
+}
+
+/**
+ * Generates a CSV file based on the data that has been passed to it. This CSV file is temporarily kept in /src/assets/csv/
+ * and will be deleted after the server shuts down, or after FILE_HOLD_TIME has passed.
+ * @param {Array} array An array of objects to be stored in the CSV file.
+ * @param {string} names The names of the attributes of the objects in the array that you want to store in the CSV file. The order of the names decides the order of the columns in the CSV file.
+ * @returns {string} A unique code that can be used to retrieve the file. (/src/assets/csv/${code}.csv)
+ * @author Noah Visser
+ * @private
+ */
+function generateCSV(array, names) {
+    let string = names.toString() + "\n";
+
+    for (let i = 0; array.length > i; i++) {
+        for (let j = 0; names.length > j; j++) string += `"${((array[i][names[j]] === null) ? "" : array[i][names[j]])}"${((names.length === j + 1) ? "" : ",")}`;
+        string += "\n"
+    }
+
+    let random = cryptoHelper.generateAuthToken();
+    fs.appendFile(`${global.wwwrootpath}/assets/csv/${random}.csv`, string, function (err) {
+        if (err) console.log(err); //throw err;
+    });
+
+    setTimeout(() => deleteCSV(random), FILE_HOLD_TIME);
+    return random;
+}
+
+async function deleteCSV(token) {
+
+    fs.unlink(`${global.wwwrootpath}/assets/csv/${token}.csv`, function (err) {
+        if (err) throw err;
+        console.log(`${token}.csv deleted.`);
+    });
+
+}
+
+/**
+ * This method retrieves all products in the product table in MySQL.
+ *
+ * @param {pool} connectionPool. The connectionPool used
+ * @param {callback} callback. The Data Callback
+ * @param {callback} err. The error callback
+ * @author Kenneth Mensah
+ * @private
+ */
+function getAllProducts(connectionPool, callback, err) {
+
+    db.handleQuery(connectionPool, {
+        query: "SELECT id, title, description, image, price, category, quantity FROM product"
+    }, (data) => {
+        callback(data)
+    }, (e) => err(e));
+}
+
+/**
+ * This method imports the array that consists of the .csv file data.
+ *
+ * @param {Array} data Array from the importProducts method
+ * @param {pool} connectionPool. The connectionPool used
+ * @param {callback} callback. The Data Callback
+ * @param {callback} err. The error callback
+ * @author Noah Visser &amp; Kenneth Mensah
+ * @private
+ */
+function importProducts(data, connectionPool, callback, err) {
+
+    if (!callback){
+        callback = () => {}
+    }
+
+    if (!err){
+        err = () => {}
+    }
+
+    console.log(data);
+
+    db.handleQuery(connectionPool, {
+        query: "INSERT INTO product (id, title, description, image, price, category, quantity) VALUES (?,?,?,?,?,?,?)",
+        values: [data.id, data.title, data.description, data.image, data.price, data.category, data.quantity]
+    }, (data) => {
+        callback(data)
+    }, (e) => err(e));
+}
+
+
+module.exports = {
+    /**
+     * Checks whether a user is an admin.
+     * @function
+     * @param {pool} connectionPool The connection pool being used.
+     * @param {number} name The id of the user.
+     * @param {callback} callback The callback to be called when the query has been successful.
+     * @param {callback} err The callback to be called when an error has occurred.
+     * @author Noah Visser
+     */
+    isAdmin,
+    /**
+     * Checks whether a user has been blocked.
+     * @function
+     * @param {pool} connectionPool The connection pool being used.
+     * @param {string} ip The IPv6 of the user.
+     * @param {number} seat The id of the user.
+     * @param {callback} callback The callback to be called when the query has been successful.
+     * @author Noah Visser
+     */
+    checkIfBlocked,
+    /**
+     * Generates a CSV file based on the data that has been passed to it. This CSV file is temporarily kept in /src/assets/csv/
+     * and will be deleted after the server shuts down, or after FILE_HOLD_TIME has passed.
+     * @function
+     * @param {Array} array An array of objects to be stored in the CSV file.
+     * @param {string} names The names of the attributes of the objects in the array that you want to store in the CSV file. The order of the names decides the order of the columns in the CSV file.
+     * @returns {string} A unique code that can be used to retrieve the file. (/src/assets/csv/${code}.csv)
+     * @author Noah Visser
+     */
+    generateCSV,
+    /**
+     * This method retrieves all products in the product table in MySQL.
+     * @function
+     * @param {pool} connectionPool. The connectionPool used
+     * @param {callback} callback. The Data Callback
+     * @param {callback} err. The error callback
+     * @author Kenneth Mensah
+     */
+    getAllProducts,
+    /**
+     * This method imports the array that consists of the .csv file data.
+     * @function
+     * @param {Array} data Array from the importProducts method
+     * @param {pool} connectionPool. The connectionPool used
+     * @param {callback} callback. The Data Callback
+     * @param {callback} err. The error callback
+     * @author Noah Visser, Kenneth Mensah
+     */
+    importProducts
+};</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+  
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+<script>
+var list = [{"title":"admin","link":"<a href=\"module-admin.html\">admin</a>"},{"title":"module:admin.init","link":"<a href=\"module-admin.html#.init\">module:admin.init &rtrif; undefined</a>"},{"title":"common","link":"<a href=\"module-common.html\">common</a>"},{"title":"module:common.checkIfBlocked","link":"<a href=\"module-common.html#.checkIfBlocked\">module:common.checkIfBlocked &rtrif; undefined</a>"},{"title":"module:common.generateCSV","link":"<a href=\"module-common.html#.generateCSV\">module:common.generateCSV &rtrif; undefined</a>"},{"title":"module:common.getAllProducts","link":"<a href=\"module-common.html#.getAllProducts\">module:common.getAllProducts &rtrif; undefined</a>"},{"title":"module:common.importProducts","link":"<a href=\"module-common.html#.importProducts\">module:common.importProducts &rtrif; undefined</a>"},{"title":"module:common.isAdmin","link":"<a href=\"module-common.html#.isAdmin\">module:common.isAdmin &rtrif; undefined</a>"},{"title":"shop","link":"<a href=\"module-shop.html\">shop</a>"},{"title":"module:shop.init","link":"<a href=\"module-shop.html#.init\">module:shop.init &rtrif; undefined</a>"},{"title":"stats","link":"<a href=\"module-stats.html\">stats</a>"},{"title":"module:stats.init","link":"<a href=\"module-stats.html#.init\">module:stats.init &rtrif; undefined</a>"},{"title":"user","link":"<a href=\"module-user.html\">user</a>"},{"title":"module:user.init","link":"<a href=\"module-user.html#.init\">module:user.init &rtrif; undefined</a>"}];
+setupSearch(list)
+</script>
+
+ 
+<script type="text/javascript" src="scripts/misc.js"></script>
+</body>
+</html>

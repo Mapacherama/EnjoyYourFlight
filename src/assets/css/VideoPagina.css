@@ -1,0 +1,31 @@
+.video-js-responsive-container {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+}
+
+#video-informatie{
+   background-color: transparent;
+    z-index: 5;
+}
+
+.vjs-texttrack-settings {
+    display: none;
+}
+
+
+#backToOverviewArrow{
+    color: white;
+    width: 7%;
+    height: 10%;
+    position: absolute;
+    top: 2%;
+    z-index: 10;
+}
+
+.vertical-center {
+    /* Fallback for browsers do NOT support vh unit */
+   /* min-height: 100vh; /* These two lines are counted as one */
+    left: 27%;
+    position: absolute;
+}

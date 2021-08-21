@@ -1,0 +1,119 @@
+html{
+    /*overflow: hidden;*/
+}
+
+footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+}
+
+.product-image{
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+    width: 100%;
+    height: 200px;
+}
+
+.product-price{
+    right:0;
+    bottom:0;
+}
+
+.tulip--container{
+    position: relative;
+    padding-bottom: 10rem;
+}
+
+.tulip--container::after{
+    content: "";
+    display: block;
+    position: absolute;
+    left: -50%;
+    bottom: -150px;
+    width: 500px;
+    height: 500px;
+    background-image: url("../img/tulip.png");
+    background-repeat: no-repeat;
+    background-size: contain;
+    z-index: -1;
+    opacity: .3;
+}
+
+.tulip--container--stem::after{
+    background-image: url("../img/stem.png");
+}
+
+@media only screen and (min-width: 576px) {
+    .tulip--container{
+        overflow: visible;
+    }
+
+    .tulip--container::after{
+        left: -100%;
+        bottom: -150px;
+        width: 200%;
+        height: 75%;
+    }
+}
+
+.product-remove--medium{
+    display: none;
+}
+
+.product-remove--mobile{
+    display: block;
+}
+
+@media only screen and (min-width: 768px) {
+    .product-remove--medium{
+        display: block;
+    }
+    .product-remove--mobile{
+        display: none;
+    }
+}
+
+.spacer{
+    height: 100px;
+}
+
+.app-logo:hover{
+    opacity: 75%;
+}
+
+.map{
+    position: absolute;
+    top:0;
+    bottom:0;
+    width: 100%;
+    z-index: -1;
+}
+
+.marker {
+    background-image: url('../../assets/img/apps/flightInformation.svg');
+    background-size: cover;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.sidebar{
+    z-index: 10;
+    background-color: var(--color-white);
+}
+
+/*Enable the user to click through element*/
+.click-through, .click-through *{
+    pointer-events: none;
+    user-select: none;
+}
+
+.divider{
+    border-top: 1px solid var(--color-grey);
+    width: 100%;
+    height:0;
+}

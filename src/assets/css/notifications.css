@@ -1,0 +1,18 @@
+.read button {
+    height: 38px;
+    width: 300px;
+    margin-left: 15px;
+}
+.notification-list {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+@media screen and (min-width: 768px){
+    .read button {
+        height: 38px;
+        width: 177px;
+        margin-left: 15px;
+    }
+}

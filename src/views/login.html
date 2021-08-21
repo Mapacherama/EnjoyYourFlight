@@ -1,0 +1,48 @@
+<div class="container">
+    <div class="row justify-content-sm-center">
+        <div class="col-sm-12 pt-5">
+        </div>
+        <div class="col-sm-4 mt-3 tulip--container">
+            <div class="row m-0">
+                <div class="col-sm-5 mb-3 p-0">
+                    <img class="img-fluid" src="assets/img/logo.png" alt="Tulip Air logo">
+                </div>
+            </div>
+            <h1 class="mb-3">System access</h1>
+
+            <form class="login-form">
+                <div class="form-group">
+                    <label for="exampleInputUsername">Seat number</label>
+                    <input type="text" name="username" placeholder="Seat number" class="form-control"
+                           id="exampleInputUsername" aria-describedby="emailHelp">
+                    <!--                    <small id="help" class="form-text text-muted">Hint: Gebruik voor nu test en test(zie database)</small>-->
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputPassword">Password</label>
+                    <href id="passwordResetButton" class="btn-password-reset" tabindex="-1" >I forgot
+                        my password
+                    </href>
+                    <div class="input-group">
+                        <input type="password" placeholder="Password" name="password" class="form-control"
+                               id="exampleInputPassword">
+                        <div class="input-group-append">
+                            <span class="input-group-text fa fa-eye show-pass"></span>
+                            <!--                            <span class="input-group-text fas fa-info"></span>-->
+                        </div>
+                    </div>
+                </div>
+
+                <!--<div class="form-check mb-3">
+                    <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                    <label class="form-check-label" for="exampleCheck1">Remember me</label>
+                </div>-->
+
+                <div class="error mb-3 text-danger"></div>
+
+                <button type="submit" class="btn btn-primary btn-block" id="login">Login</button>
+                <button id="registerButton" class="btn btn-block">No account? Register</button>
+
+            </form>
+        </div>
+    </div>
+</div>

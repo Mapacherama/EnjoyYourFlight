@@ -1,0 +1,9 @@
+.manage-data button {
+    width: 222px;
+    margin: 10px;
+}
+
+#productCSV {
+    visibility: hidden;
+    position: fixed;
+}
